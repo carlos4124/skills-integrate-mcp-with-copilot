@@ -84,8 +84,15 @@ def root():
 
 
 @app.get("/activities")
-def get_activities():
-    return activities
+def get_activities(search: str = None):
+    """Devuelve actividades, opcionalmente filtradas por texto en nombre o descripción"""
+    if not search:
+        return activities
+    filtered = {}
+    for name, details in activities.items():
+        if search.lower() in name.lower() or search.lower() in details["description"].lower():
+            filtered[name] = details
+    return filtered
 
 
 @app.post("/activities/{activity_name}/signup")
